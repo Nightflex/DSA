@@ -1,1 +1,2 @@
-Practicing For #rd Sem Exam
+Practicing For 3rd Sem Exam
+Keeping Notes For Future Use
