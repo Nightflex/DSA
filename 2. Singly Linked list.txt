@@ -1,0 +1,250 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure for CSLL
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Head pointer initialized to NULL
+struct Node* head = NULL;
+
+// Function to create the CSLL with a single node
+void createList(int data) {
+    if (head != NULL) {
+        printf("List already created.\n");
+        return;
+    }
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    head = newNode;
+    newNode->next = head;
+    printf("List created with node %d.\n", data);
+}
+
+// Function to add a node at the front of CSLL
+void addAtFront(int data) {
+    if (head == NULL) {
+        createList(data);
+        return;
+    }
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+
+    struct Node* temp = head;
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+    newNode->next = head;
+    temp->next = newNode;
+    head = newNode;
+    printf("Node %d added at the front.\n", data);
+}
+
+// Function to add a node at a specific position in CSLL
+void addAtPosition(int data, int position) {
+    int len = getLength();
+    if (position < 1 || position > len + 1) {
+        printf("Invalid position.\n");
+        return;
+    }
+    if (position == 1) {
+        addAtFront(data);
+        return;
+    }
+    if (position == len + 1) {
+        addAtEnd(data);
+        return;
+    }
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    struct Node* temp = head;
+    for (int i = 1; i < position - 1; i++) {
+        temp = temp->next;
+    }
+    newNode->next = temp->next;
+    temp->next = newNode;
+    printf("Node %d added at position %d.\n", data, position);
+}
+
+// Function to add a node at the end of CSLL
+void addAtEnd(int data) {
+    if (head == NULL) {
+        createList(data);
+        return;
+    }
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+
+    struct Node* temp = head;
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+    newNode->next = head;
+    printf("Node %d added at the end.\n", data);
+}
+
+// Function to delete a node from the front of CSLL
+void deleteAtFront() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    struct Node* last = head;
+    while (last->next != head) {
+        last = last->next;
+    }
+    if (head->next == head) {
+        free(head);
+        head = NULL;
+    } else {
+        head = head->next;
+        last->next = head;
+        free(temp);
+    }
+    printf("Node deleted from the front.\n");
+}
+
+// Function to delete a node at a specific position in CSLL
+void deleteAtPosition(int position) {
+    int len = getLength();
+    if (position < 1 || position > len) {
+        printf("Invalid position.\n");
+        return;
+    }
+    if (position == 1) {
+        deleteAtFront();
+        return;
+    }
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+    for (int i = 1; i < position; i++) {
+        prev = temp;
+        temp = temp->next;
+    }
+    prev->next = temp->next;
+    free(temp);
+    printf("Node deleted at position %d.\n", position);
+}
+
+// Function to delete a node from the end of CSLL
+void deleteAtEnd() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+    while (temp->next != head) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (prev == NULL) { // Only one node
+        free(head);
+        head = NULL;
+    } else {
+        prev->next = head;
+        free(temp);
+    }
+    printf("Node deleted from the end.\n");
+}
+
+// Function to get the length of the CSLL
+int getLength() {
+    if (head == NULL) return 0;
+
+    int count = 0;
+    struct Node* temp = head;
+    do {
+        count++;
+        temp = temp->next;
+    } while (temp != head);
+    return count;
+}
+
+// Function to display the CSLL
+void displayList() {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct Node* temp = head;
+    printf("Circular Singly Linked List: ");
+    do {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    } while (temp != head);
+    printf("HEAD\n");
+}
+
+// Main function with switch-case menu
+int main() {
+    int choice, data, position;
+
+    do {
+        printf("\n--- Circular Singly Linked List Operations ---\n");
+        printf("1. Create List\n");
+        printf("2. Add at Front\n");
+        printf("3. Add at Position\n");
+        printf("4. Add at End\n");
+        printf("5. Delete at Front\n");
+        printf("6. Delete at Position\n");
+        printf("7. Delete at End\n");
+        printf("8. Get Length\n");
+        printf("9. Display List\n");
+        printf("0. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter data to create list: ");
+                scanf("%d", &data);
+                createList(data);
+                break;
+            case 2:
+                printf("Enter data to add at front: ");
+                scanf("%d", &data);
+                addAtFront(data);
+                break;
+            case 3:
+                printf("Enter data and position to add at: ");
+                scanf("%d %d", &data, &position);
+                addAtPosition(data, position);
+                break;
+            case 4:
+                printf("Enter data to add at end: ");
+                scanf("%d", &data);
+                addAtEnd(data);
+                break;
+            case 5:
+                deleteAtFront();
+                break;
+            case 6:
+                printf("Enter position to delete at: ");
+                scanf("%d", &position);
+                deleteAtPosition(position);
+                break;
+            case 7:
+                deleteAtEnd();
+                break;
+            case 8:
+                printf("Length of the list: %d\n", getLength());
+                break;
+            case 9:
+                displayList();
+                break;
+            case 0:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    } while (choice != 0);
+
+    return 0;
+}
